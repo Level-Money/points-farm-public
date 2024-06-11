@@ -1,13 +1,10 @@
-# Sample Hardhat Project
+## Compile
+```yarn compile```
+## Deploy 
+#### Command
+```yarn deploy```
+#### Parameters
+```_signer```: The address which can sign the migration message  
+```_tokensAllowed```:  Tokens which are allowed to deposit into the contract  
+```_weth```: Weth token address
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
-
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts deploy.js
-```
