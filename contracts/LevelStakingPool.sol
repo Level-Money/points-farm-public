@@ -12,11 +12,17 @@ import {Nonces} from "@openzeppelin/contracts/utils/Nonces.sol";
 import "./interface/IWETH.sol";
 
 import "./interface/IMigrator.sol";
-import "./interface/IZtakingPool.sol";
+import "./interface/ILevelStakingPool.sol";
 
-/// @title Ztaking Pool
-/// @notice A staking pool for liquid restaking token holders which rewards stakers with points from multiple platforms
-contract ZtakingPool is IZtakingPool, Ownable2Step, Pausable, EIP712, Nonces {
+/// @title Level Staking Pool
+/// @notice A staking pool which rewards stakers with points from multiple platforms
+contract LevelStakingPool is
+    ILevelStakingPool,
+    Ownable2Step,
+    Pausable,
+    EIP712,
+    Nonces
+{
     using SafeERC20 for IERC20;
 
     bytes32 private constant MIGRATE_TYPEHASH =
@@ -37,7 +43,7 @@ contract ZtakingPool is IZtakingPool, Ownable2Step, Pausable, EIP712, Nonces {
     uint256 private eventId;
 
     // Required signer for the migration message
-    address public zircuitSigner;
+    address public levelSigner;
 
     // ETH's special address
     address immutable WETH_ADDRESS;
@@ -46,13 +52,13 @@ contract ZtakingPool is IZtakingPool, Ownable2Step, Pausable, EIP712, Nonces {
         address _signer,
         address[] memory _tokensAllowed,
         address _weth
-    ) Ownable(msg.sender) EIP712("ZtakingPool", "1") {
+    ) Ownable(msg.sender) EIP712("LevelStakingPool", "1") {
         if (_signer == address(0)) revert SignerCannotBeZeroAddress();
         if (_weth == address(0)) revert WETHCannotBeZeroAddress();
 
         WETH_ADDRESS = _weth;
 
-        zircuitSigner = _signer;
+        levelSigner = _signer;
         uint256 length = _tokensAllowed.length;
         for (uint256 i; i < length; ++i) {
             if (_tokensAllowed[i] == address(0))
@@ -66,7 +72,7 @@ contract ZtakingPool is IZtakingPool, Ownable2Step, Pausable, EIP712, Nonces {
     //////////////////////////////////////////////////////////////*/
 
     /**
-     * @inheritdoc IZtakingPool
+     * @inheritdoc ILevelStakingPool
      */
     function depositFor(
         address _token,
@@ -96,7 +102,7 @@ contract ZtakingPool is IZtakingPool, Ownable2Step, Pausable, EIP712, Nonces {
     }
 
     /**
-     * @inheritdoc IZtakingPool
+     * @inheritdoc ILevelStakingPool
      */
     function withdraw(address _token, uint256 _amount) external {
         if (_amount == 0) revert WithdrawAmountCannotBeZero();
@@ -108,7 +114,7 @@ contract ZtakingPool is IZtakingPool, Ownable2Step, Pausable, EIP712, Nonces {
     }
 
     /**
-     * @inheritdoc IZtakingPool
+     * @inheritdoc ILevelStakingPool
      */
     function migrateWithSig(
         address _user,
@@ -155,14 +161,14 @@ contract ZtakingPool is IZtakingPool, Ownable2Step, Pausable, EIP712, Nonces {
     }
 
     /**
-     * @inheritdoc IZtakingPool
+     * @inheritdoc ILevelStakingPool
      */
     function migrate(
         address[] calldata _tokens,
         address _migratorContract,
         address _destination,
         uint256 _signatureExpiry,
-        bytes calldata _authorizationSignatureFromZircuit
+        bytes calldata _authorizationSignatureFromLevel
     ) external {
         uint256[] memory _amounts = _migrateChecks(
             msg.sender,
@@ -185,12 +191,12 @@ contract ZtakingPool is IZtakingPool, Ownable2Step, Pausable, EIP712, Nonces {
             )
         );
 
-        // verify that the migrator’s address is signed in the authorization signature by the correct signer (zircuitSigner)
+        // verify that the migrator’s address is signed in the authorization signature by the correct signer (levelSigner)
         if (
             !SignatureChecker.isValidSignatureNow(
-                zircuitSigner,
+                levelSigner,
                 constructedHash,
-                _authorizationSignatureFromZircuit
+                _authorizationSignatureFromLevel
             )
         ) {
             revert SignatureInvalid();
@@ -269,18 +275,18 @@ contract ZtakingPool is IZtakingPool, Ownable2Step, Pausable, EIP712, Nonces {
     //////////////////////////////////////////////////////////////*/
 
     /**
-     * @inheritdoc IZtakingPool
+     * @inheritdoc ILevelStakingPool
      */
-    function setZircuitSigner(address _signer) external onlyOwner {
+    function setLevelSigner(address _signer) external onlyOwner {
         if (_signer == address(0)) revert SignerCannotBeZeroAddress();
-        if (_signer == zircuitSigner) revert SignerAlreadySetToAddress();
+        if (_signer == levelSigner) revert SignerAlreadySetToAddress();
 
-        zircuitSigner = _signer;
+        levelSigner = _signer;
         emit SignerChanged(_signer);
     }
 
     /**
-     * @inheritdoc IZtakingPool
+     * @inheritdoc ILevelStakingPool
      */
     function setStakable(address _token, bool _canStake) external onlyOwner {
         if (_token == address(0)) revert TokenCannotBeZeroAddress();
@@ -292,7 +298,7 @@ contract ZtakingPool is IZtakingPool, Ownable2Step, Pausable, EIP712, Nonces {
     }
 
     /**
-     * @inheritdoc IZtakingPool
+     * @inheritdoc ILevelStakingPool
      */
     function blockMigrator(
         address _migrator,
@@ -307,14 +313,14 @@ contract ZtakingPool is IZtakingPool, Ownable2Step, Pausable, EIP712, Nonces {
     }
 
     /**
-     * @inheritdoc IZtakingPool
+     * @inheritdoc ILevelStakingPool
      */
     function pause() external onlyOwner whenNotPaused {
         _pause();
     }
 
     /**
-     * @inheritdoc IZtakingPool
+     * @inheritdoc ILevelStakingPool
      */
     function unpause() external onlyOwner whenPaused {
         _unpause();

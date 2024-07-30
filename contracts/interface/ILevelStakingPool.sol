@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.24;
 
-/// @title Ztaking Pool Interface
-/// @notice An interface containing externally accessible functions of the ZtakingPool contract
+/// @title LevelStaking Pool Interface
+/// @notice An interface containing externally accessible functions of the LevelStakingPool contract
 /// @dev The automatically generated public view functions for the state variables and mappings are not included in the interface
-interface IZtakingPool {
+interface ILevelStakingPool {
     /*//////////////////////////////////////////////////////////////
                             Errors
     //////////////////////////////////////////////////////////////*/
@@ -32,9 +32,9 @@ interface IZtakingPool {
                             Staker Events
     //////////////////////////////////////////////////////////////*/
 
-    ///@notice Emitted when a staker deposits/stakes a supported token into the Ztaking Pool
+    ///@notice Emitted when a staker deposits/stakes a supported token into the LevelStaking Pool
     ///@param eventId The unique event Id associated with the Deposit event
-    ///@param depositor The address of the depositer/staker transfering funds to the Ztaking Pool
+    ///@param depositor The address of the depositer/staker transfering funds to the LevelStaking Pool
     ///@param token The address of the token deposited/staked into the pool
     ///@param amount The amount of token deposited/staked into the pool
     event Deposit(
@@ -44,9 +44,9 @@ interface IZtakingPool {
         uint256 amount
     );
 
-    ///@notice Emitted when a staker withdraws a previously staked tokens from the Ztaking Pool
+    ///@notice Emitted when a staker withdraws a previously staked tokens from the LevelStaking Pool
     ///@param eventId The unique event Id associated with the Withdraw event
-    ///@param withdrawer The address of the staker withdrawing funds from the Ztaking Pool
+    ///@param withdrawer The address of the staker withdrawing funds from the LevelStaking Pool
     ///@param token The address of the token being withdrawn from the pool
     ///@param amount The amount of tokens withdrawn the pool
     event Withdraw(
@@ -56,13 +56,13 @@ interface IZtakingPool {
         uint256 amount
     );
 
-    ///@notice Emitted when a staker migrates their tokens from the ZtakingPool to Zircuit.
+    ///@notice Emitted when a staker migrates their tokens from the LevelStakingPool to Level.
     ///@param eventId The unique event Id associated with the Migrate event
-    ///@param user The address of the staker migrating funds to Zircuit
-    ///@param tokens The addresses of the tokens being being migrated from the ZtakingPool to Zircuit
-    ///@param destination The address which the tokens will be transferred to on Zircuit
+    ///@param user The address of the staker migrating funds to Level
+    ///@param tokens The addresses of the tokens being being migrated from the LevelStakingPool to Level
+    ///@param destination The address which the tokens will be transferred to on Level
     ///@param migrator The address of the migrator contract which initially receives the migrated tokens
-    ///@param amounts The amounts of each token migrated to Zircuit
+    ///@param amounts The amounts of each token migrated to Level
     event Migrate(
         uint256 indexed eventId,
         address indexed user,
@@ -94,43 +94,43 @@ interface IZtakingPool {
                             Staker Functions
     //////////////////////////////////////////////////////////////*/
 
-    ///@notice Stake a specified amount of a particular supported token into the Ztaking Pool
-    ///@param _token The token to deposit/stake in the Ztaking Pool
+    ///@notice Stake a specified amount of a particular supported token into the LevelStaking Pool
+    ///@param _token The token to deposit/stake in the LevelStaking Pool
     ///@param _for The user to deposit/stake on behalf of
-    ///@param _amount The amount of token to deposit/stake into the Ztaking Pool
+    ///@param _amount The amount of token to deposit/stake into the LevelStaking Pool
     function depositFor(address _token, address _for, uint256 _amount) external;
 
-    ///@notice Stake a specified amount of ether into the Ztaking Pool
+    ///@notice Stake a specified amount of ether into the LevelStaking Pool
     ///@param _for The user to deposit/stake on behalf of
     ///@dev the amount deposited is specified by msg.value
     function depositETHFor(address _for) external payable;
 
-    ///@notice Withdraw a specified amount of a particular supported token previously staked into the Ztaking Pool
-    ///@param _token The token to withdraw from the Ztaking Pool
-    ///@param _amount The amount of token to withdraw from the Ztaking Pool
+    ///@notice Withdraw a specified amount of a particular supported token previously staked into the LevelStaking Pool
+    ///@param _token The token to withdraw from the LevelStaking Pool
+    ///@param _amount The amount of token to withdraw from the LevelStaking Pool
     function withdraw(address _token, uint256 _amount) external;
 
-    ///@notice Migrate the staked tokens for the caller from the Ztaking Pool to Zircuit
+    ///@notice Migrate the staked tokens for the caller from the LevelStaking Pool to Level
     ///@dev called by the staker
-    ///@param _tokens The tokens to migrate to Zircuit from the Ztaking Pool
-    ///@param _migratorContract The migrator contract which will initially receive the migrated tokens before moving them to Zircuit
-    ///@param _destination The address which will receive the migrated tokens on Zircuit
-    ///@param _signatureExpiry The timestamp at which the signature in _authorizationSignatureFromZircuit expires
-    ///@param _authorizationSignatureFromZircuit The authorization signature which is signed by the zircuit signer and indicates the correct migrator contract
+    ///@param _tokens The tokens to migrate to Level from the LevelStaking Pool
+    ///@param _migratorContract The migrator contract which will initially receive the migrated tokens before moving them to Level
+    ///@param _destination The address which will receive the migrated tokens on Level
+    ///@param _signatureExpiry The timestamp at which the signature in _authorizationSignatureFromLevel expires
+    ///@param _authorizationSignatureFromLevel The authorization signature which is signed by the level signer and indicates the correct migrator contract
     function migrate(
         address[] calldata _tokens,
         address _migratorContract,
         address _destination,
         uint256 _signatureExpiry,
-        bytes memory _authorizationSignatureFromZircuit
+        bytes memory _authorizationSignatureFromLevel
     ) external;
 
-    ///@notice Migrate the staked tokens for the caller from the Ztaking Pool to Zircuit
+    ///@notice Migrate the staked tokens for the caller from the LevelStaking Pool to Level
     ///@param _user The staker to migrate tokens for
-    ///@param _tokens The tokens to migrate to Zircuit from the Ztaking Pool
-    ///@param _migratorContract The migrator contract which will initially receive the migrated tokens before moving them to Zircuit
-    ///@param _destination The address which will receive the migrated tokens on Zircuit
-    ///@param _signatureExpiry The timestamp at which the signature in _authorizationSignatureFromZircuit expires
+    ///@param _tokens The tokens to migrate to Level from the LevelStaking Pool
+    ///@param _migratorContract The migrator contract which will initially receive the migrated tokens before moving them to Level
+    ///@param _destination The address which will receive the migrated tokens on Level
+    ///@param _signatureExpiry The timestamp at which the signature in _authorizationSignatureFromLevel expires
     ///@param _stakerSignature The signature from the staker authorizing the migration of their tokens
     function migrateWithSig(
         address _user,
@@ -145,10 +145,10 @@ interface IZtakingPool {
                             Admin Functions
     //////////////////////////////////////////////////////////////*/
 
-    ///@notice Set/Change the required signer for the migration signature (_authorizationSignatureFromZircuit in the migrate() function)
+    ///@notice Set/Change the required signer for the migration signature (_authorizationSignatureFromLevel in the migrate() function)
     ///@param _signer The address of the new signer for the migration signature
     ///@dev Only callable by the owner
-    function setZircuitSigner(address _signer) external;
+    function setLevelSigner(address _signer) external;
 
     ///@notice Enable or disable the specified token for staking
     ///@param _token The token to enable or disable for staking

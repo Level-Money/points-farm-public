@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "deploy": "npx hardhat run scripts/deploy.js",
+    "deploy-contracts": "npx hardhat run scripts/deploy.js",
     "compile": "npx hardhat compile"
   },
   "devDependencies": {
@@ -25,6 +25,7 @@
     "typechain": "^8.3.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^5.0.2"
+    "@openzeppelin/contracts": "^5.0.2",
+    "dotenv": "^16.4.5"
   }
 }
