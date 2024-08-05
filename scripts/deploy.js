@@ -6,6 +6,10 @@ const args = {
     tokensAllowed: [
       // stETH
       "0xae7ab96520de3a18e5e111b5eaab095312d7fe84",
+      // EtherFi ETH
+      "0x35fa164735182de50811e8e2e824cfb9b6118ac2",
+      // Puffer ETH
+      "0xD9A442856C234a39a81a089C06451EBAa4306a72",
       // Renzo ETH
       "0xbf5495Efe5DB9ce00f80364C8B423567e58d2110",
       // Kelp ETH
@@ -32,6 +36,14 @@ const args = {
       "0xf08a50178dfcde18524640ea6618a1f965821715",
     ],
     weth: "0x7b79995e5f793a07bc00c21412e50ecae098e7f9",
+  },
+  shasta: {
+    signer: "TNWjj2ZzpXXqjsQKhp5b1nbUm9xYRcBn6c",
+    tokensAllowed: [
+      // Shasta USDT
+      "TG3XXyExBkPp9nzdajDZsozEu4BkaSJozs",
+    ],
+    weth: "TG3XXyExBkPp9nzdajDZsozEu4BkaSJozs",
   },
 };
 async function main() {

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.24;
+pragma solidity >=0.8.20;
 
 /// @title Migrator Interface
 /// @notice Interface for the Migrator contract called by the LevelStaking Pool's migrate() function
