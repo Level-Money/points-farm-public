@@ -1,4 +1,5 @@
 const hre = require("hardhat");
+const tronweb = require("tronweb");
 
 const args = {
   mainnet: {
@@ -46,15 +47,20 @@ const args = {
     weth: "TG3XXyExBkPp9nzdajDZsozEu4BkaSJozs",
   },
 };
+
+const isTron = (network) => network === "shasta" || network === "tron";
+
 async function main() {
   const network = hre.network.name;
   console.log(`deploying on ${network} network`);
 
-  const [_signer, _tokensAllowed, _weth] = [
-    args[network].signer,
-    args[network].tokensAllowed,
-    args[network].weth,
-  ];
+  const [_signer, _tokensAllowed, _weth] = isTron(hre.network.name)
+    ? [
+        tronweb.address.fromHex(args[network].signer),
+        args[network].tokensAllowed.map(tronweb.address.fromHex),
+        tronweb.address.fromHex(args[network].weth),
+      ]
+    : [args[network].signer, args[network].tokensAllowed, args[network].weth];
 
   const LevelMoney = await hre.ethers.getContractFactory("LevelStakingPool");
   const levelMoney = await LevelMoney.deploy(_signer, _tokensAllowed, _weth);

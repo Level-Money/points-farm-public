@@ -63,6 +63,9 @@ importers:
       solidity-coverage:
         specifier: ^0.8.0
         version: 0.8.12(hardhat@2.22.6(ts-node@10.9.2(@types/node@22.0.0)(typescript@5.5.4))(typescript@5.5.4))
+      tronweb:
+        specifier: ^5.3.2
+        version: 5.3.2(debug@4.3.6)
       typechain:
         specifier: ^8.3.0
         version: 8.3.2(typescript@5.5.4)

@@ -46,25 +46,25 @@ contract LevelStakingPool is
     address public levelSigner;
 
     // ETH's special address
-    address immutable WETH_ADDRESS;
+    address public WETH_ADDRESS;
 
-    constructor(
-        address _signer,
-        address[] memory _tokensAllowed,
-        address _weth
-    ) Ownable(msg.sender) EIP712("LevelStakingPool", "1") {
-        if (_signer == address(0)) revert SignerCannotBeZeroAddress();
-        if (_weth == address(0)) revert WETHCannotBeZeroAddress();
-
-        WETH_ADDRESS = _weth;
-
-        levelSigner = _signer;
-        uint256 length = _tokensAllowed.length;
-        for (uint256 i; i < length; ++i) {
-            if (_tokensAllowed[i] == address(0))
-                revert TokenCannotBeZeroAddress();
-            tokenAllowlist[_tokensAllowed[i]] = true;
-        }
+    constructor()
+        // address _signer,
+        // address[] memory _tokensAllowed,
+        // address _weth
+        Ownable(msg.sender)
+        EIP712("LevelStakingPool", "1")
+    {
+        // if (_signer == address(0)) revert SignerCannotBeZeroAddress();
+        // if (_weth == address(0)) revert WETHCannotBeZeroAddress();
+        // WETH_ADDRESS = _weth;
+        // levelSigner = _signer;
+        // uint256 length = _tokensAllowed.length;
+        // for (uint256 i; i < length; ++i) {
+        //     if (_tokensAllowed[i] == address(0))
+        //         revert TokenCannotBeZeroAddress();
+        //     tokenAllowlist[_tokensAllowed[i]] = true;
+        // }
     }
 
     /*//////////////////////////////////////////////////////////////
