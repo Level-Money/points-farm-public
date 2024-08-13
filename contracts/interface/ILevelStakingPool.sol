@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.24;
+pragma solidity 0.8.20;
 
 /// @title LevelStaking Pool Interface
 /// @notice An interface containing externally accessible functions of the LevelStakingPool contract

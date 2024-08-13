@@ -1,0 +1,4459 @@
+{
+  "contractName": "ILevelStakingPool",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "CannotDepositForZeroAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "CannotRenounceOwnership",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "DepositAmountCannotBeZero",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "DuplicateToken",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "MigratorAlreadyAllowedOrBlocked",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "MigratorBlocked",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "MigratorCannotBeZeroAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SignatureExpired",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SignatureInvalid",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SignerAlreadySetToAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SignerCannotBeZeroAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "StakingLimitExceeded",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TokenAlreadyConfiguredWithState",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TokenArrayCannotBeEmpty",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TokenCannotBeZeroAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TokenNotAllowedForStaking",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "UserDoesNotHaveStake",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "WETHCannotBeZeroAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "WithdrawAmountCannotBeZero",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "migrator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "blocked",
+          "type": "bool"
+        }
+      ],
+      "name": "BlocklistChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "eventId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "depositor",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Deposit",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "eventId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address[]",
+          "name": "tokens",
+          "type": "address[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "destination",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "migrator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[]",
+          "name": "amounts",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "Migrate",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "newSigner",
+          "type": "address"
+        }
+      ],
+      "name": "SignerChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "TokenStakabilityChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "eventId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "withdrawer",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Withdraw",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_migrator",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_blocklisted",
+          "type": "bool"
+        }
+      ],
+      "name": "blockMigrator",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_for",
+          "type": "address"
+        }
+      ],
+      "name": "depositETHFor",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_for",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "depositFor",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_tokens",
+          "type": "address[]"
+        },
+        {
+          "internalType": "address",
+          "name": "_migratorContract",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_destination",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_signatureExpiry",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_authorizationSignatureFromLevel",
+          "type": "bytes"
+        }
+      ],
+      "name": "migrate",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_tokens",
+          "type": "address[]"
+        },
+        {
+          "internalType": "address",
+          "name": "_migratorContract",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_destination",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_signatureExpiry",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_stakerSignature",
+          "type": "bytes"
+        }
+      ],
+      "name": "migrateWithSig",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "pause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_signer",
+          "type": "address"
+        }
+      ],
+      "name": "setLevelSigner",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "setStakableAmount",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "unpause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: UNLICENSED\npragma solidity 0.8.20;\n\n/// @title LevelStaking Pool Interface\n/// @notice An interface containing externally accessible functions of the LevelStakingPool contract\n/// @dev The automatically generated public view functions for the state variables and mappings are not included in the interface\ninterface ILevelStakingPool {\n    /*//////////////////////////////////////////////////////////////\n                            Errors\n    //////////////////////////////////////////////////////////////*/\n\n    error SignerCannotBeZeroAddress(); //Thrown when proposed signer is the zero address\n    error SignerAlreadySetToAddress(); //Thrown when proposed signer is already set\n    error SignatureInvalid(); // Thrown when the migration signature is invalid\n    error SignatureExpired(); // Thrown when the migration signature has expired\n    error TokenCannotBeZeroAddress(); // Thrown when the specified token is the zero address\n    error WETHCannotBeZeroAddress(); // Thrown when the specified token is the zero address\n    error TokenAlreadyConfiguredWithState(); //Thrown if the token as already been enabled or disabled\n    error DepositAmountCannotBeZero(); // Thrown if staker attempts to call deposit() with zero amount\n    error WithdrawAmountCannotBeZero(); //Thrown if staker attempts to call withdraw() with zero amount\n    error TokenNotAllowedForStaking(); // Thrown if staker attempts to stake unsupported token (or token disabled for staking)\n    error StakingLimitExceeded();\n    error UserDoesNotHaveStake(); //Thrown if the staker is attempting to migrate with no stake\n    error MigratorCannotBeZeroAddress(); //Thrown if the provided migrator is the zero address\n    error MigratorAlreadyAllowedOrBlocked(); //Thrown if attempting to block a migrator which has already been blocked or attempting to allow a migrator which is already allowed\n    error MigratorBlocked(); //Thrown if the provided migrator contract has been blacklisted.\n    error CannotDepositForZeroAddress(); //Thrown if caller tries to deposit on behalf of the zero address\n    error CannotRenounceOwnership(); //Thrown if the renounceOwnership() function is called\n    error DuplicateToken(); //Thrown when there is a duplicate in the provided token address array\n    error TokenArrayCannotBeEmpty(); //Thrown when the provided token address array is empty\n\n    /*//////////////////////////////////////////////////////////////\n                            Staker Events\n    //////////////////////////////////////////////////////////////*/\n\n    ///@notice Emitted when a staker deposits/stakes a supported token into the LevelStaking Pool\n    ///@param eventId The unique event Id associated with the Deposit event\n    ///@param depositor The address of the depositer/staker transfering funds to the LevelStaking Pool\n    ///@param token The address of the token deposited/staked into the pool\n    ///@param amount The amount of token deposited/staked into the pool\n    event Deposit(\n        uint256 indexed eventId,\n        address indexed depositor,\n        address indexed token,\n        uint256 amount\n    );\n\n    ///@notice Emitted when a staker withdraws a previously staked tokens from the LevelStaking Pool\n    ///@param eventId The unique event Id associated with the Withdraw event\n    ///@param withdrawer The address of the staker withdrawing funds from the LevelStaking Pool\n    ///@param token The address of the token being withdrawn from the pool\n    ///@param amount The amount of tokens withdrawn the pool\n    event Withdraw(\n        uint256 indexed eventId,\n        address indexed withdrawer,\n        address indexed token,\n        uint256 amount\n    );\n\n    ///@notice Emitted when a staker migrates their tokens from the LevelStakingPool to Level.\n    ///@param eventId The unique event Id associated with the Migrate event\n    ///@param user The address of the staker migrating funds to Level\n    ///@param tokens The addresses of the tokens being being migrated from the LevelStakingPool to Level\n    ///@param destination The address which the tokens will be transferred to on Level\n    ///@param migrator The address of the migrator contract which initially receives the migrated tokens\n    ///@param amounts The amounts of each token migrated to Level\n    event Migrate(\n        uint256 indexed eventId,\n        address indexed user,\n        address[] tokens,\n        address destination,\n        address migrator,\n        uint256[] amounts\n    );\n\n    /*//////////////////////////////////////////////////////////////\n                            Admin Events\n    //////////////////////////////////////////////////////////////*/\n\n    ///@notice Emitted when the required signer for the migration signature is changed\n    ///@param newSigner The address of the new signer which must sign the migration signature\n    event SignerChanged(address newSigner);\n\n    ///@notice Emitted when a token has been enabled or disabled for staking\n    ///@param token The address of the token which has been enabled/disabled for staking\n    ///@param amount amount of tokens stakeable\n    event TokenStakabilityChanged(address token, uint256 amount);\n\n    ///@notice Emitted when a migrator has been added or removed from the blocklist\n    ///@param migrator The address of the migrator which has been added or removed from the blocklist\n    ///@param blocked Is true if the migrator was added to the blocklist, and false if it was removed from the blocklist\n    event BlocklistChanged(address migrator, bool blocked);\n\n    /*//////////////////////////////////////////////////////////////\n                            Staker Functions\n    //////////////////////////////////////////////////////////////*/\n\n    ///@notice Stake a specified amount of a particular supported token into the LevelStaking Pool\n    ///@param _token The token to deposit/stake in the LevelStaking Pool\n    ///@param _for The user to deposit/stake on behalf of\n    ///@param _amount The amount of token to deposit/stake into the LevelStaking Pool\n    function depositFor(address _token, address _for, uint256 _amount) external;\n\n    ///@notice Stake a specified amount of ether into the LevelStaking Pool\n    ///@param _for The user to deposit/stake on behalf of\n    ///@dev the amount deposited is specified by msg.value\n    function depositETHFor(address _for) external payable;\n\n    ///@notice Withdraw a specified amount of a particular supported token previously staked into the LevelStaking Pool\n    ///@param _token The token to withdraw from the LevelStaking Pool\n    ///@param _amount The amount of token to withdraw from the LevelStaking Pool\n    function withdraw(address _token, uint256 _amount) external;\n\n    ///@notice Migrate the staked tokens for the caller from the LevelStaking Pool to Level\n    ///@dev called by the staker\n    ///@param _tokens The tokens to migrate to Level from the LevelStaking Pool\n    ///@param _migratorContract The migrator contract which will initially receive the migrated tokens before moving them to Level\n    ///@param _destination The address which will receive the migrated tokens on Level\n    ///@param _signatureExpiry The timestamp at which the signature in _authorizationSignatureFromLevel expires\n    ///@param _authorizationSignatureFromLevel The authorization signature which is signed by the level signer and indicates the correct migrator contract\n    function migrate(\n        address[] calldata _tokens,\n        address _migratorContract,\n        address _destination,\n        uint256 _signatureExpiry,\n        bytes memory _authorizationSignatureFromLevel\n    ) external;\n\n    ///@notice Migrate the staked tokens for the caller from the LevelStaking Pool to Level\n    ///@param _user The staker to migrate tokens for\n    ///@param _tokens The tokens to migrate to Level from the LevelStaking Pool\n    ///@param _migratorContract The migrator contract which will initially receive the migrated tokens before moving them to Level\n    ///@param _destination The address which will receive the migrated tokens on Level\n    ///@param _signatureExpiry The timestamp at which the signature in _authorizationSignatureFromLevel expires\n    ///@param _stakerSignature The signature from the staker authorizing the migration of their tokens\n    function migrateWithSig(\n        address _user,\n        address[] calldata _tokens,\n        address _migratorContract,\n        address _destination,\n        uint256 _signatureExpiry,\n        bytes memory _stakerSignature\n    ) external;\n\n    /*//////////////////////////////////////////////////////////////\n                            Admin Functions\n    //////////////////////////////////////////////////////////////*/\n\n    ///@notice Set/Change the required signer for the migration signature (_authorizationSignatureFromLevel in the migrate() function)\n    ///@param _signer The address of the new signer for the migration signature\n    ///@dev Only callable by the owner\n    function setLevelSigner(address _signer) external;\n\n    ///@notice Enable or disable the specified token for staking\n    ///@param _token The token to enable or disable for staking\n    ///@param _amount limit for stakable tokens\n    ///@dev Only callable by the owner\n    function setStakableAmount(address _token, uint256 _amount) external;\n\n    ///@notice Add or remove the migrator to/from the blocklist, such that it can no longer be used from migrating tokens from the staking pool\n    ///@param _migrator The migrator contract to add or remove from the blocklist\n    ///@param _blocklisted If true, then add the migrator to the blocklist. If false, then remove the migrator from the blocklist.\n    ///@dev Only callable by the owner\n    function blockMigrator(address _migrator, bool _blocklisted) external;\n\n    ///@notice Pause further staking through the deposit function.\n    ///@dev Only callable by the owner. Withdrawals and migrations will still be possible when paused\n    function pause() external;\n\n    ///@notice Unpause staking allowing the deposit function to be used again\n    ///@dev Only callable by the owner\n    function unpause() external;\n}\n",
+  "sourcePath": "contracts/interface/ILevelStakingPool.sol",
+  "ast": {
+    "absolutePath": "contracts/interface/ILevelStakingPool.sol",
+    "exportedSymbols": {
+      "ILevelStakingPool": [
+        4852
+      ]
+    },
+    "id": 4853,
+    "license": "UNLICENSED",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 4668,
+        "literals": [
+          "solidity",
+          "0.8",
+          ".20"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:23:24"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "ILevelStakingPool",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 4669,
+          "nodeType": "StructuredDocumentation",
+          "src": "64:270:24",
+          "text": "@title LevelStaking Pool Interface\n @notice An interface containing externally accessible functions of the LevelStakingPool contract\n @dev The automatically generated public view functions for the state variables and mappings are not included in the interface"
+        },
+        "fullyImplemented": false,
+        "id": 4852,
+        "linearizedBaseContracts": [
+          4852
+        ],
+        "name": "ILevelStakingPool",
+        "nameLocation": "344:17:24",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "errorSelector": "cfb6108a",
+            "id": 4671,
+            "name": "SignerCannotBeZeroAddress",
+            "nameLocation": "548:25:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4670,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "573:2:24"
+            },
+            "src": "542:34:24"
+          },
+          {
+            "errorSelector": "c0af9fdf",
+            "id": 4673,
+            "name": "SignerAlreadySetToAddress",
+            "nameLocation": "637:25:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4672,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "662:2:24"
+            },
+            "src": "631:34:24"
+          },
+          {
+            "errorSelector": "37e8456b",
+            "id": 4675,
+            "name": "SignatureInvalid",
+            "nameLocation": "721:16:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4674,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "737:2:24"
+            },
+            "src": "715:25:24"
+          },
+          {
+            "errorSelector": "0819bdcd",
+            "id": 4677,
+            "name": "SignatureExpired",
+            "nameLocation": "801:16:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4676,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "817:2:24"
+            },
+            "src": "795:25:24"
+          },
+          {
+            "errorSelector": "5f5d3399",
+            "id": 4679,
+            "name": "TokenCannotBeZeroAddress",
+            "nameLocation": "882:24:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4678,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "906:2:24"
+            },
+            "src": "876:33:24"
+          },
+          {
+            "errorSelector": "29112939",
+            "id": 4681,
+            "name": "WETHCannotBeZeroAddress",
+            "nameLocation": "975:23:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4680,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "998:2:24"
+            },
+            "src": "969:32:24"
+          },
+          {
+            "errorSelector": "eacb7f1e",
+            "id": 4683,
+            "name": "TokenAlreadyConfiguredWithState",
+            "nameLocation": "1067:31:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4682,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1098:2:24"
+            },
+            "src": "1061:40:24"
+          },
+          {
+            "errorSelector": "3176eb12",
+            "id": 4685,
+            "name": "DepositAmountCannotBeZero",
+            "nameLocation": "1170:25:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4684,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1195:2:24"
+            },
+            "src": "1164:34:24"
+          },
+          {
+            "errorSelector": "b8fc0f3b",
+            "id": 4687,
+            "name": "WithdrawAmountCannotBeZero",
+            "nameLocation": "1273:26:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4686,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1299:2:24"
+            },
+            "src": "1267:35:24"
+          },
+          {
+            "errorSelector": "0e57113e",
+            "id": 4689,
+            "name": "TokenNotAllowedForStaking",
+            "nameLocation": "1377:25:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4688,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1402:2:24"
+            },
+            "src": "1371:34:24"
+          },
+          {
+            "errorSelector": "7772c9c5",
+            "id": 4691,
+            "name": "StakingLimitExceeded",
+            "nameLocation": "1504:20:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4690,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1524:2:24"
+            },
+            "src": "1498:29:24"
+          },
+          {
+            "errorSelector": "a809389f",
+            "id": 4693,
+            "name": "UserDoesNotHaveStake",
+            "nameLocation": "1538:20:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4692,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1558:2:24"
+            },
+            "src": "1532:29:24"
+          },
+          {
+            "errorSelector": "1a86f045",
+            "id": 4695,
+            "name": "MigratorCannotBeZeroAddress",
+            "nameLocation": "1634:27:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4694,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1661:2:24"
+            },
+            "src": "1628:36:24"
+          },
+          {
+            "errorSelector": "f2d4bb48",
+            "id": 4697,
+            "name": "MigratorAlreadyAllowedOrBlocked",
+            "nameLocation": "1729:31:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4696,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1760:2:24"
+            },
+            "src": "1723:40:24"
+          },
+          {
+            "errorSelector": "9997d665",
+            "id": 4699,
+            "name": "MigratorBlocked",
+            "nameLocation": "1907:15:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4698,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1922:2:24"
+            },
+            "src": "1901:24:24"
+          },
+          {
+            "errorSelector": "05df0428",
+            "id": 4701,
+            "name": "CannotDepositForZeroAddress",
+            "nameLocation": "2001:27:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4700,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2028:2:24"
+            },
+            "src": "1995:36:24"
+          },
+          {
+            "errorSelector": "77aeb0ad",
+            "id": 4703,
+            "name": "CannotRenounceOwnership",
+            "nameLocation": "2108:23:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4702,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2131:2:24"
+            },
+            "src": "2102:32:24"
+          },
+          {
+            "errorSelector": "464e3f6a",
+            "id": 4705,
+            "name": "DuplicateToken",
+            "nameLocation": "2200:14:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4704,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2214:2:24"
+            },
+            "src": "2194:23:24"
+          },
+          {
+            "errorSelector": "e78703a3",
+            "id": 4707,
+            "name": "TokenArrayCannotBeEmpty",
+            "nameLocation": "2299:23:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4706,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2322:2:24"
+            },
+            "src": "2293:32:24"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 4708,
+              "nodeType": "StructuredDocumentation",
+              "src": "2568:420:24",
+              "text": "@notice Emitted when a staker deposits/stakes a supported token into the LevelStaking Pool\n@param eventId The unique event Id associated with the Deposit event\n@param depositor The address of the depositer/staker transfering funds to the LevelStaking Pool\n@param token The address of the token deposited/staked into the pool\n@param amount The amount of token deposited/staked into the pool"
+            },
+            "eventSelector": "2c0f148b435140de488c1b34647f1511c646f7077e87007bacf22ef9977a16d8",
+            "id": 4718,
+            "name": "Deposit",
+            "nameLocation": "2999:7:24",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4717,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4710,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "eventId",
+                  "nameLocation": "3032:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4718,
+                  "src": "3016:23:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4709,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3016:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4712,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "depositor",
+                  "nameLocation": "3065:9:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4718,
+                  "src": "3049:25:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4711,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3049:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4714,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nameLocation": "3100:5:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4718,
+                  "src": "3084:21:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4713,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3084:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4716,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "3123:6:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4718,
+                  "src": "3115:14:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4715,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3115:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3006:129:24"
+            },
+            "src": "2993:143:24"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 4719,
+              "nodeType": "StructuredDocumentation",
+              "src": "3142:405:24",
+              "text": "@notice Emitted when a staker withdraws a previously staked tokens from the LevelStaking Pool\n@param eventId The unique event Id associated with the Withdraw event\n@param withdrawer The address of the staker withdrawing funds from the LevelStaking Pool\n@param token The address of the token being withdrawn from the pool\n@param amount The amount of tokens withdrawn the pool"
+            },
+            "eventSelector": "feb2000dca3e617cd6f3a8bbb63014bb54a124aac6ccbf73ee7229b4cd01f120",
+            "id": 4729,
+            "name": "Withdraw",
+            "nameLocation": "3558:8:24",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4728,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4721,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "eventId",
+                  "nameLocation": "3592:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4729,
+                  "src": "3576:23:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4720,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3576:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4723,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "withdrawer",
+                  "nameLocation": "3625:10:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4729,
+                  "src": "3609:26:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4722,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3609:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4725,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nameLocation": "3661:5:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4729,
+                  "src": "3645:21:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4724,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3645:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4727,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "3684:6:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4729,
+                  "src": "3676:14:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4726,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3676:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3566:130:24"
+            },
+            "src": "3552:145:24"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 4730,
+              "nodeType": "StructuredDocumentation",
+              "src": "3703:599:24",
+              "text": "@notice Emitted when a staker migrates their tokens from the LevelStakingPool to Level.\n@param eventId The unique event Id associated with the Migrate event\n@param user The address of the staker migrating funds to Level\n@param tokens The addresses of the tokens being being migrated from the LevelStakingPool to Level\n@param destination The address which the tokens will be transferred to on Level\n@param migrator The address of the migrator contract which initially receives the migrated tokens\n@param amounts The amounts of each token migrated to Level"
+            },
+            "eventSelector": "8ec7c0970f810f90b2e926cd4ee4f32efff0ef16fb5e08617c11b9fad14dfc00",
+            "id": 4746,
+            "name": "Migrate",
+            "nameLocation": "4313:7:24",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4745,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4732,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "eventId",
+                  "nameLocation": "4346:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4746,
+                  "src": "4330:23:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4731,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4330:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4734,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "user",
+                  "nameLocation": "4379:4:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4746,
+                  "src": "4363:20:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4733,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4363:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4737,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "tokens",
+                  "nameLocation": "4403:6:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4746,
+                  "src": "4393:16:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_memory_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 4735,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "4393:7:24",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 4736,
+                    "nodeType": "ArrayTypeName",
+                    "src": "4393:9:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4739,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "destination",
+                  "nameLocation": "4427:11:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4746,
+                  "src": "4419:19:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4738,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4419:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4741,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "migrator",
+                  "nameLocation": "4456:8:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4746,
+                  "src": "4448:16:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4740,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4448:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4744,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amounts",
+                  "nameLocation": "4484:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4746,
+                  "src": "4474:17:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 4742,
+                      "name": "uint256",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "4474:7:24",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 4743,
+                    "nodeType": "ArrayTypeName",
+                    "src": "4474:9:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4320:177:24"
+            },
+            "src": "4307:191:24"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 4747,
+              "nodeType": "StructuredDocumentation",
+              "src": "4684:176:24",
+              "text": "@notice Emitted when the required signer for the migration signature is changed\n@param newSigner The address of the new signer which must sign the migration signature"
+            },
+            "eventSelector": "5719a5656c5cfdaafa148ecf366fd3b0a7fae06449ce2a46225977fb7417e29d",
+            "id": 4751,
+            "name": "SignerChanged",
+            "nameLocation": "4871:13:24",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4750,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4749,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "newSigner",
+                  "nameLocation": "4893:9:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4751,
+                  "src": "4885:17:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4748,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4885:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4884:19:24"
+            },
+            "src": "4865:39:24"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 4752,
+              "nodeType": "StructuredDocumentation",
+              "src": "4910:209:24",
+              "text": "@notice Emitted when a token has been enabled or disabled for staking\n@param token The address of the token which has been enabled/disabled for staking\n@param amount amount of tokens stakeable"
+            },
+            "eventSelector": "35d46b75420dd9ec4491bd2dd87bd191f71294a1c1aa219c292d3250f4e68964",
+            "id": 4758,
+            "name": "TokenStakabilityChanged",
+            "nameLocation": "5130:23:24",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4757,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4754,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nameLocation": "5162:5:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4758,
+                  "src": "5154:13:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4753,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5154:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4756,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "5177:6:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4758,
+                  "src": "5169:14:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4755,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5169:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5153:31:24"
+            },
+            "src": "5124:61:24"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 4759,
+              "nodeType": "StructuredDocumentation",
+              "src": "5191:302:24",
+              "text": "@notice Emitted when a migrator has been added or removed from the blocklist\n@param migrator The address of the migrator which has been added or removed from the blocklist\n@param blocked Is true if the migrator was added to the blocklist, and false if it was removed from the blocklist"
+            },
+            "eventSelector": "939ba97d9885a19f5539df8bc7d0698b79b1361793009861943fdd9806048033",
+            "id": 4765,
+            "name": "BlocklistChanged",
+            "nameLocation": "5504:16:24",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4764,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4761,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "migrator",
+                  "nameLocation": "5529:8:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4765,
+                  "src": "5521:16:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4760,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5521:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4763,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "blocked",
+                  "nameLocation": "5544:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4765,
+                  "src": "5539:12:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4762,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5539:4:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5520:32:24"
+            },
+            "src": "5498:55:24"
+          },
+          {
+            "documentation": {
+              "id": 4766,
+              "nodeType": "StructuredDocumentation",
+              "src": "5743:311:24",
+              "text": "@notice Stake a specified amount of a particular supported token into the LevelStaking Pool\n@param _token The token to deposit/stake in the LevelStaking Pool\n@param _for The user to deposit/stake on behalf of\n@param _amount The amount of token to deposit/stake into the LevelStaking Pool"
+            },
+            "functionSelector": "b3db428b",
+            "id": 4775,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "depositFor",
+            "nameLocation": "6068:10:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4773,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4768,
+                  "mutability": "mutable",
+                  "name": "_token",
+                  "nameLocation": "6087:6:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4775,
+                  "src": "6079:14:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4767,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6079:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4770,
+                  "mutability": "mutable",
+                  "name": "_for",
+                  "nameLocation": "6103:4:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4775,
+                  "src": "6095:12:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4769,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6095:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4772,
+                  "mutability": "mutable",
+                  "name": "_amount",
+                  "nameLocation": "6117:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4775,
+                  "src": "6109:15:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4771,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6109:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "6078:47:24"
+            },
+            "returnParameters": {
+              "id": 4774,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "6134:0:24"
+            },
+            "scope": 4852,
+            "src": "6059:76:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4776,
+              "nodeType": "StructuredDocumentation",
+              "src": "6141:188:24",
+              "text": "@notice Stake a specified amount of ether into the LevelStaking Pool\n@param _for The user to deposit/stake on behalf of\n@dev the amount deposited is specified by msg.value"
+            },
+            "functionSelector": "f6203e35",
+            "id": 4781,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "depositETHFor",
+            "nameLocation": "6343:13:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4779,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4778,
+                  "mutability": "mutable",
+                  "name": "_for",
+                  "nameLocation": "6365:4:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4781,
+                  "src": "6357:12:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4777,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6357:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "6356:14:24"
+            },
+            "returnParameters": {
+              "id": 4780,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "6387:0:24"
+            },
+            "scope": 4852,
+            "src": "6334:54:24",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4782,
+              "nodeType": "StructuredDocumentation",
+              "src": "6394:266:24",
+              "text": "@notice Withdraw a specified amount of a particular supported token previously staked into the LevelStaking Pool\n@param _token The token to withdraw from the LevelStaking Pool\n@param _amount The amount of token to withdraw from the LevelStaking Pool"
+            },
+            "functionSelector": "f3fef3a3",
+            "id": 4789,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdraw",
+            "nameLocation": "6674:8:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4787,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4784,
+                  "mutability": "mutable",
+                  "name": "_token",
+                  "nameLocation": "6691:6:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4789,
+                  "src": "6683:14:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4783,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6683:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4786,
+                  "mutability": "mutable",
+                  "name": "_amount",
+                  "nameLocation": "6707:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4789,
+                  "src": "6699:15:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4785,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6699:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "6682:33:24"
+            },
+            "returnParameters": {
+              "id": 4788,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "6724:0:24"
+            },
+            "scope": 4852,
+            "src": "6665:60:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4790,
+              "nodeType": "StructuredDocumentation",
+              "src": "6731:685:24",
+              "text": "@notice Migrate the staked tokens for the caller from the LevelStaking Pool to Level\n@dev called by the staker\n@param _tokens The tokens to migrate to Level from the LevelStaking Pool\n@param _migratorContract The migrator contract which will initially receive the migrated tokens before moving them to Level\n@param _destination The address which will receive the migrated tokens on Level\n@param _signatureExpiry The timestamp at which the signature in _authorizationSignatureFromLevel expires\n@param _authorizationSignatureFromLevel The authorization signature which is signed by the level signer and indicates the correct migrator contract"
+            },
+            "functionSelector": "e3c34216",
+            "id": 4804,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "migrate",
+            "nameLocation": "7430:7:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4802,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4793,
+                  "mutability": "mutable",
+                  "name": "_tokens",
+                  "nameLocation": "7466:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4804,
+                  "src": "7447:26:24",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 4791,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "7447:7:24",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 4792,
+                    "nodeType": "ArrayTypeName",
+                    "src": "7447:9:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4795,
+                  "mutability": "mutable",
+                  "name": "_migratorContract",
+                  "nameLocation": "7491:17:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4804,
+                  "src": "7483:25:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4794,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7483:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4797,
+                  "mutability": "mutable",
+                  "name": "_destination",
+                  "nameLocation": "7526:12:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4804,
+                  "src": "7518:20:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4796,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7518:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4799,
+                  "mutability": "mutable",
+                  "name": "_signatureExpiry",
+                  "nameLocation": "7556:16:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4804,
+                  "src": "7548:24:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4798,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7548:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4801,
+                  "mutability": "mutable",
+                  "name": "_authorizationSignatureFromLevel",
+                  "nameLocation": "7595:32:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4804,
+                  "src": "7582:45:24",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 4800,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7582:5:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "7437:196:24"
+            },
+            "returnParameters": {
+              "id": 4803,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "7642:0:24"
+            },
+            "scope": 4852,
+            "src": "7421:222:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4805,
+              "nodeType": "StructuredDocumentation",
+              "src": "7649:653:24",
+              "text": "@notice Migrate the staked tokens for the caller from the LevelStaking Pool to Level\n@param _user The staker to migrate tokens for\n@param _tokens The tokens to migrate to Level from the LevelStaking Pool\n@param _migratorContract The migrator contract which will initially receive the migrated tokens before moving them to Level\n@param _destination The address which will receive the migrated tokens on Level\n@param _signatureExpiry The timestamp at which the signature in _authorizationSignatureFromLevel expires\n@param _stakerSignature The signature from the staker authorizing the migration of their tokens"
+            },
+            "functionSelector": "a5a21fdf",
+            "id": 4821,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "migrateWithSig",
+            "nameLocation": "8316:14:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4819,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4807,
+                  "mutability": "mutable",
+                  "name": "_user",
+                  "nameLocation": "8348:5:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4821,
+                  "src": "8340:13:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4806,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8340:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4810,
+                  "mutability": "mutable",
+                  "name": "_tokens",
+                  "nameLocation": "8382:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4821,
+                  "src": "8363:26:24",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 4808,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "8363:7:24",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 4809,
+                    "nodeType": "ArrayTypeName",
+                    "src": "8363:9:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4812,
+                  "mutability": "mutable",
+                  "name": "_migratorContract",
+                  "nameLocation": "8407:17:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4821,
+                  "src": "8399:25:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4811,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8399:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4814,
+                  "mutability": "mutable",
+                  "name": "_destination",
+                  "nameLocation": "8442:12:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4821,
+                  "src": "8434:20:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4813,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8434:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4816,
+                  "mutability": "mutable",
+                  "name": "_signatureExpiry",
+                  "nameLocation": "8472:16:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4821,
+                  "src": "8464:24:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4815,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8464:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4818,
+                  "mutability": "mutable",
+                  "name": "_stakerSignature",
+                  "nameLocation": "8511:16:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4821,
+                  "src": "8498:29:24",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 4817,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8498:5:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "8330:203:24"
+            },
+            "returnParameters": {
+              "id": 4820,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "8542:0:24"
+            },
+            "scope": 4852,
+            "src": "8307:236:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4822,
+              "nodeType": "StructuredDocumentation",
+              "src": "8732:249:24",
+              "text": "@notice Set/Change the required signer for the migration signature (_authorizationSignatureFromLevel in the migrate() function)\n@param _signer The address of the new signer for the migration signature\n@dev Only callable by the owner"
+            },
+            "functionSelector": "eebdec04",
+            "id": 4827,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setLevelSigner",
+            "nameLocation": "8995:14:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4825,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4824,
+                  "mutability": "mutable",
+                  "name": "_signer",
+                  "nameLocation": "9018:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4827,
+                  "src": "9010:15:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4823,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9010:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "9009:17:24"
+            },
+            "returnParameters": {
+              "id": 4826,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "9035:0:24"
+            },
+            "scope": 4852,
+            "src": "8986:50:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4828,
+              "nodeType": "StructuredDocumentation",
+              "src": "9042:211:24",
+              "text": "@notice Enable or disable the specified token for staking\n@param _token The token to enable or disable for staking\n@param _amount limit for stakable tokens\n@dev Only callable by the owner"
+            },
+            "functionSelector": "dbe49434",
+            "id": 4835,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setStakableAmount",
+            "nameLocation": "9267:17:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4833,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4830,
+                  "mutability": "mutable",
+                  "name": "_token",
+                  "nameLocation": "9293:6:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4835,
+                  "src": "9285:14:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4829,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9285:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4832,
+                  "mutability": "mutable",
+                  "name": "_amount",
+                  "nameLocation": "9309:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4835,
+                  "src": "9301:15:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4831,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9301:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "9284:33:24"
+            },
+            "returnParameters": {
+              "id": 4834,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "9326:0:24"
+            },
+            "scope": 4852,
+            "src": "9258:69:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4836,
+              "nodeType": "StructuredDocumentation",
+              "src": "9333:391:24",
+              "text": "@notice Add or remove the migrator to/from the blocklist, such that it can no longer be used from migrating tokens from the staking pool\n@param _migrator The migrator contract to add or remove from the blocklist\n@param _blocklisted If true, then add the migrator to the blocklist. If false, then remove the migrator from the blocklist.\n@dev Only callable by the owner"
+            },
+            "functionSelector": "f03639e3",
+            "id": 4843,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "blockMigrator",
+            "nameLocation": "9738:13:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4841,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4838,
+                  "mutability": "mutable",
+                  "name": "_migrator",
+                  "nameLocation": "9760:9:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4843,
+                  "src": "9752:17:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4837,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9752:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4840,
+                  "mutability": "mutable",
+                  "name": "_blocklisted",
+                  "nameLocation": "9776:12:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4843,
+                  "src": "9771:17:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4839,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9771:4:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "9751:38:24"
+            },
+            "returnParameters": {
+              "id": 4842,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "9798:0:24"
+            },
+            "scope": 4852,
+            "src": "9729:70:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4844,
+              "nodeType": "StructuredDocumentation",
+              "src": "9805:164:24",
+              "text": "@notice Pause further staking through the deposit function.\n@dev Only callable by the owner. Withdrawals and migrations will still be possible when paused"
+            },
+            "functionSelector": "8456cb59",
+            "id": 4847,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "pause",
+            "nameLocation": "9983:5:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4845,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "9988:2:24"
+            },
+            "returnParameters": {
+              "id": 4846,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "9999:0:24"
+            },
+            "scope": 4852,
+            "src": "9974:26:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4848,
+              "nodeType": "StructuredDocumentation",
+              "src": "10006:112:24",
+              "text": "@notice Unpause staking allowing the deposit function to be used again\n@dev Only callable by the owner"
+            },
+            "functionSelector": "3f4ba83a",
+            "id": 4851,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "unpause",
+            "nameLocation": "10132:7:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4849,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "10139:2:24"
+            },
+            "returnParameters": {
+              "id": 4850,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "10150:0:24"
+            },
+            "scope": 4852,
+            "src": "10123:28:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 4853,
+        "src": "334:9819:24",
+        "usedErrors": [
+          4671,
+          4673,
+          4675,
+          4677,
+          4679,
+          4681,
+          4683,
+          4685,
+          4687,
+          4689,
+          4691,
+          4693,
+          4695,
+          4697,
+          4699,
+          4701,
+          4703,
+          4705,
+          4707
+        ],
+        "usedEvents": [
+          4718,
+          4729,
+          4746,
+          4751,
+          4758,
+          4765
+        ]
+      }
+    ],
+    "src": "39:10115:24"
+  },
+  "legacyAST": {
+    "absolutePath": "contracts/interface/ILevelStakingPool.sol",
+    "exportedSymbols": {
+      "ILevelStakingPool": [
+        4852
+      ]
+    },
+    "id": 4853,
+    "license": "UNLICENSED",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 4668,
+        "literals": [
+          "solidity",
+          "0.8",
+          ".20"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:23:24"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "ILevelStakingPool",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 4669,
+          "nodeType": "StructuredDocumentation",
+          "src": "64:270:24",
+          "text": "@title LevelStaking Pool Interface\n @notice An interface containing externally accessible functions of the LevelStakingPool contract\n @dev The automatically generated public view functions for the state variables and mappings are not included in the interface"
+        },
+        "fullyImplemented": false,
+        "id": 4852,
+        "linearizedBaseContracts": [
+          4852
+        ],
+        "name": "ILevelStakingPool",
+        "nameLocation": "344:17:24",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "errorSelector": "cfb6108a",
+            "id": 4671,
+            "name": "SignerCannotBeZeroAddress",
+            "nameLocation": "548:25:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4670,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "573:2:24"
+            },
+            "src": "542:34:24"
+          },
+          {
+            "errorSelector": "c0af9fdf",
+            "id": 4673,
+            "name": "SignerAlreadySetToAddress",
+            "nameLocation": "637:25:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4672,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "662:2:24"
+            },
+            "src": "631:34:24"
+          },
+          {
+            "errorSelector": "37e8456b",
+            "id": 4675,
+            "name": "SignatureInvalid",
+            "nameLocation": "721:16:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4674,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "737:2:24"
+            },
+            "src": "715:25:24"
+          },
+          {
+            "errorSelector": "0819bdcd",
+            "id": 4677,
+            "name": "SignatureExpired",
+            "nameLocation": "801:16:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4676,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "817:2:24"
+            },
+            "src": "795:25:24"
+          },
+          {
+            "errorSelector": "5f5d3399",
+            "id": 4679,
+            "name": "TokenCannotBeZeroAddress",
+            "nameLocation": "882:24:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4678,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "906:2:24"
+            },
+            "src": "876:33:24"
+          },
+          {
+            "errorSelector": "29112939",
+            "id": 4681,
+            "name": "WETHCannotBeZeroAddress",
+            "nameLocation": "975:23:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4680,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "998:2:24"
+            },
+            "src": "969:32:24"
+          },
+          {
+            "errorSelector": "eacb7f1e",
+            "id": 4683,
+            "name": "TokenAlreadyConfiguredWithState",
+            "nameLocation": "1067:31:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4682,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1098:2:24"
+            },
+            "src": "1061:40:24"
+          },
+          {
+            "errorSelector": "3176eb12",
+            "id": 4685,
+            "name": "DepositAmountCannotBeZero",
+            "nameLocation": "1170:25:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4684,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1195:2:24"
+            },
+            "src": "1164:34:24"
+          },
+          {
+            "errorSelector": "b8fc0f3b",
+            "id": 4687,
+            "name": "WithdrawAmountCannotBeZero",
+            "nameLocation": "1273:26:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4686,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1299:2:24"
+            },
+            "src": "1267:35:24"
+          },
+          {
+            "errorSelector": "0e57113e",
+            "id": 4689,
+            "name": "TokenNotAllowedForStaking",
+            "nameLocation": "1377:25:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4688,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1402:2:24"
+            },
+            "src": "1371:34:24"
+          },
+          {
+            "errorSelector": "7772c9c5",
+            "id": 4691,
+            "name": "StakingLimitExceeded",
+            "nameLocation": "1504:20:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4690,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1524:2:24"
+            },
+            "src": "1498:29:24"
+          },
+          {
+            "errorSelector": "a809389f",
+            "id": 4693,
+            "name": "UserDoesNotHaveStake",
+            "nameLocation": "1538:20:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4692,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1558:2:24"
+            },
+            "src": "1532:29:24"
+          },
+          {
+            "errorSelector": "1a86f045",
+            "id": 4695,
+            "name": "MigratorCannotBeZeroAddress",
+            "nameLocation": "1634:27:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4694,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1661:2:24"
+            },
+            "src": "1628:36:24"
+          },
+          {
+            "errorSelector": "f2d4bb48",
+            "id": 4697,
+            "name": "MigratorAlreadyAllowedOrBlocked",
+            "nameLocation": "1729:31:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4696,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1760:2:24"
+            },
+            "src": "1723:40:24"
+          },
+          {
+            "errorSelector": "9997d665",
+            "id": 4699,
+            "name": "MigratorBlocked",
+            "nameLocation": "1907:15:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4698,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1922:2:24"
+            },
+            "src": "1901:24:24"
+          },
+          {
+            "errorSelector": "05df0428",
+            "id": 4701,
+            "name": "CannotDepositForZeroAddress",
+            "nameLocation": "2001:27:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4700,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2028:2:24"
+            },
+            "src": "1995:36:24"
+          },
+          {
+            "errorSelector": "77aeb0ad",
+            "id": 4703,
+            "name": "CannotRenounceOwnership",
+            "nameLocation": "2108:23:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4702,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2131:2:24"
+            },
+            "src": "2102:32:24"
+          },
+          {
+            "errorSelector": "464e3f6a",
+            "id": 4705,
+            "name": "DuplicateToken",
+            "nameLocation": "2200:14:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4704,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2214:2:24"
+            },
+            "src": "2194:23:24"
+          },
+          {
+            "errorSelector": "e78703a3",
+            "id": 4707,
+            "name": "TokenArrayCannotBeEmpty",
+            "nameLocation": "2299:23:24",
+            "nodeType": "ErrorDefinition",
+            "parameters": {
+              "id": 4706,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2322:2:24"
+            },
+            "src": "2293:32:24"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 4708,
+              "nodeType": "StructuredDocumentation",
+              "src": "2568:420:24",
+              "text": "@notice Emitted when a staker deposits/stakes a supported token into the LevelStaking Pool\n@param eventId The unique event Id associated with the Deposit event\n@param depositor The address of the depositer/staker transfering funds to the LevelStaking Pool\n@param token The address of the token deposited/staked into the pool\n@param amount The amount of token deposited/staked into the pool"
+            },
+            "eventSelector": "2c0f148b435140de488c1b34647f1511c646f7077e87007bacf22ef9977a16d8",
+            "id": 4718,
+            "name": "Deposit",
+            "nameLocation": "2999:7:24",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4717,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4710,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "eventId",
+                  "nameLocation": "3032:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4718,
+                  "src": "3016:23:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4709,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3016:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4712,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "depositor",
+                  "nameLocation": "3065:9:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4718,
+                  "src": "3049:25:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4711,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3049:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4714,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nameLocation": "3100:5:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4718,
+                  "src": "3084:21:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4713,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3084:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4716,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "3123:6:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4718,
+                  "src": "3115:14:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4715,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3115:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3006:129:24"
+            },
+            "src": "2993:143:24"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 4719,
+              "nodeType": "StructuredDocumentation",
+              "src": "3142:405:24",
+              "text": "@notice Emitted when a staker withdraws a previously staked tokens from the LevelStaking Pool\n@param eventId The unique event Id associated with the Withdraw event\n@param withdrawer The address of the staker withdrawing funds from the LevelStaking Pool\n@param token The address of the token being withdrawn from the pool\n@param amount The amount of tokens withdrawn the pool"
+            },
+            "eventSelector": "feb2000dca3e617cd6f3a8bbb63014bb54a124aac6ccbf73ee7229b4cd01f120",
+            "id": 4729,
+            "name": "Withdraw",
+            "nameLocation": "3558:8:24",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4728,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4721,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "eventId",
+                  "nameLocation": "3592:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4729,
+                  "src": "3576:23:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4720,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3576:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4723,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "withdrawer",
+                  "nameLocation": "3625:10:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4729,
+                  "src": "3609:26:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4722,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3609:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4725,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nameLocation": "3661:5:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4729,
+                  "src": "3645:21:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4724,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3645:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4727,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "3684:6:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4729,
+                  "src": "3676:14:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4726,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3676:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3566:130:24"
+            },
+            "src": "3552:145:24"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 4730,
+              "nodeType": "StructuredDocumentation",
+              "src": "3703:599:24",
+              "text": "@notice Emitted when a staker migrates their tokens from the LevelStakingPool to Level.\n@param eventId The unique event Id associated with the Migrate event\n@param user The address of the staker migrating funds to Level\n@param tokens The addresses of the tokens being being migrated from the LevelStakingPool to Level\n@param destination The address which the tokens will be transferred to on Level\n@param migrator The address of the migrator contract which initially receives the migrated tokens\n@param amounts The amounts of each token migrated to Level"
+            },
+            "eventSelector": "8ec7c0970f810f90b2e926cd4ee4f32efff0ef16fb5e08617c11b9fad14dfc00",
+            "id": 4746,
+            "name": "Migrate",
+            "nameLocation": "4313:7:24",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4745,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4732,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "eventId",
+                  "nameLocation": "4346:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4746,
+                  "src": "4330:23:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4731,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4330:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4734,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "user",
+                  "nameLocation": "4379:4:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4746,
+                  "src": "4363:20:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4733,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4363:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4737,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "tokens",
+                  "nameLocation": "4403:6:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4746,
+                  "src": "4393:16:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_memory_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 4735,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "4393:7:24",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 4736,
+                    "nodeType": "ArrayTypeName",
+                    "src": "4393:9:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4739,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "destination",
+                  "nameLocation": "4427:11:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4746,
+                  "src": "4419:19:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4738,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4419:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4741,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "migrator",
+                  "nameLocation": "4456:8:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4746,
+                  "src": "4448:16:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4740,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4448:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4744,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amounts",
+                  "nameLocation": "4484:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4746,
+                  "src": "4474:17:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 4742,
+                      "name": "uint256",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "4474:7:24",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 4743,
+                    "nodeType": "ArrayTypeName",
+                    "src": "4474:9:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4320:177:24"
+            },
+            "src": "4307:191:24"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 4747,
+              "nodeType": "StructuredDocumentation",
+              "src": "4684:176:24",
+              "text": "@notice Emitted when the required signer for the migration signature is changed\n@param newSigner The address of the new signer which must sign the migration signature"
+            },
+            "eventSelector": "5719a5656c5cfdaafa148ecf366fd3b0a7fae06449ce2a46225977fb7417e29d",
+            "id": 4751,
+            "name": "SignerChanged",
+            "nameLocation": "4871:13:24",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4750,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4749,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "newSigner",
+                  "nameLocation": "4893:9:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4751,
+                  "src": "4885:17:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4748,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4885:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4884:19:24"
+            },
+            "src": "4865:39:24"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 4752,
+              "nodeType": "StructuredDocumentation",
+              "src": "4910:209:24",
+              "text": "@notice Emitted when a token has been enabled or disabled for staking\n@param token The address of the token which has been enabled/disabled for staking\n@param amount amount of tokens stakeable"
+            },
+            "eventSelector": "35d46b75420dd9ec4491bd2dd87bd191f71294a1c1aa219c292d3250f4e68964",
+            "id": 4758,
+            "name": "TokenStakabilityChanged",
+            "nameLocation": "5130:23:24",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4757,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4754,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nameLocation": "5162:5:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4758,
+                  "src": "5154:13:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4753,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5154:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4756,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "5177:6:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4758,
+                  "src": "5169:14:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4755,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5169:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5153:31:24"
+            },
+            "src": "5124:61:24"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 4759,
+              "nodeType": "StructuredDocumentation",
+              "src": "5191:302:24",
+              "text": "@notice Emitted when a migrator has been added or removed from the blocklist\n@param migrator The address of the migrator which has been added or removed from the blocklist\n@param blocked Is true if the migrator was added to the blocklist, and false if it was removed from the blocklist"
+            },
+            "eventSelector": "939ba97d9885a19f5539df8bc7d0698b79b1361793009861943fdd9806048033",
+            "id": 4765,
+            "name": "BlocklistChanged",
+            "nameLocation": "5504:16:24",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4764,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4761,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "migrator",
+                  "nameLocation": "5529:8:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4765,
+                  "src": "5521:16:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4760,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5521:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4763,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "blocked",
+                  "nameLocation": "5544:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4765,
+                  "src": "5539:12:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4762,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5539:4:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5520:32:24"
+            },
+            "src": "5498:55:24"
+          },
+          {
+            "documentation": {
+              "id": 4766,
+              "nodeType": "StructuredDocumentation",
+              "src": "5743:311:24",
+              "text": "@notice Stake a specified amount of a particular supported token into the LevelStaking Pool\n@param _token The token to deposit/stake in the LevelStaking Pool\n@param _for The user to deposit/stake on behalf of\n@param _amount The amount of token to deposit/stake into the LevelStaking Pool"
+            },
+            "functionSelector": "b3db428b",
+            "id": 4775,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "depositFor",
+            "nameLocation": "6068:10:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4773,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4768,
+                  "mutability": "mutable",
+                  "name": "_token",
+                  "nameLocation": "6087:6:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4775,
+                  "src": "6079:14:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4767,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6079:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4770,
+                  "mutability": "mutable",
+                  "name": "_for",
+                  "nameLocation": "6103:4:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4775,
+                  "src": "6095:12:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4769,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6095:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4772,
+                  "mutability": "mutable",
+                  "name": "_amount",
+                  "nameLocation": "6117:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4775,
+                  "src": "6109:15:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4771,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6109:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "6078:47:24"
+            },
+            "returnParameters": {
+              "id": 4774,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "6134:0:24"
+            },
+            "scope": 4852,
+            "src": "6059:76:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4776,
+              "nodeType": "StructuredDocumentation",
+              "src": "6141:188:24",
+              "text": "@notice Stake a specified amount of ether into the LevelStaking Pool\n@param _for The user to deposit/stake on behalf of\n@dev the amount deposited is specified by msg.value"
+            },
+            "functionSelector": "f6203e35",
+            "id": 4781,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "depositETHFor",
+            "nameLocation": "6343:13:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4779,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4778,
+                  "mutability": "mutable",
+                  "name": "_for",
+                  "nameLocation": "6365:4:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4781,
+                  "src": "6357:12:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4777,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6357:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "6356:14:24"
+            },
+            "returnParameters": {
+              "id": 4780,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "6387:0:24"
+            },
+            "scope": 4852,
+            "src": "6334:54:24",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4782,
+              "nodeType": "StructuredDocumentation",
+              "src": "6394:266:24",
+              "text": "@notice Withdraw a specified amount of a particular supported token previously staked into the LevelStaking Pool\n@param _token The token to withdraw from the LevelStaking Pool\n@param _amount The amount of token to withdraw from the LevelStaking Pool"
+            },
+            "functionSelector": "f3fef3a3",
+            "id": 4789,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdraw",
+            "nameLocation": "6674:8:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4787,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4784,
+                  "mutability": "mutable",
+                  "name": "_token",
+                  "nameLocation": "6691:6:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4789,
+                  "src": "6683:14:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4783,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6683:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4786,
+                  "mutability": "mutable",
+                  "name": "_amount",
+                  "nameLocation": "6707:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4789,
+                  "src": "6699:15:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4785,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6699:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "6682:33:24"
+            },
+            "returnParameters": {
+              "id": 4788,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "6724:0:24"
+            },
+            "scope": 4852,
+            "src": "6665:60:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4790,
+              "nodeType": "StructuredDocumentation",
+              "src": "6731:685:24",
+              "text": "@notice Migrate the staked tokens for the caller from the LevelStaking Pool to Level\n@dev called by the staker\n@param _tokens The tokens to migrate to Level from the LevelStaking Pool\n@param _migratorContract The migrator contract which will initially receive the migrated tokens before moving them to Level\n@param _destination The address which will receive the migrated tokens on Level\n@param _signatureExpiry The timestamp at which the signature in _authorizationSignatureFromLevel expires\n@param _authorizationSignatureFromLevel The authorization signature which is signed by the level signer and indicates the correct migrator contract"
+            },
+            "functionSelector": "e3c34216",
+            "id": 4804,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "migrate",
+            "nameLocation": "7430:7:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4802,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4793,
+                  "mutability": "mutable",
+                  "name": "_tokens",
+                  "nameLocation": "7466:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4804,
+                  "src": "7447:26:24",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 4791,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "7447:7:24",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 4792,
+                    "nodeType": "ArrayTypeName",
+                    "src": "7447:9:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4795,
+                  "mutability": "mutable",
+                  "name": "_migratorContract",
+                  "nameLocation": "7491:17:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4804,
+                  "src": "7483:25:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4794,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7483:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4797,
+                  "mutability": "mutable",
+                  "name": "_destination",
+                  "nameLocation": "7526:12:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4804,
+                  "src": "7518:20:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4796,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7518:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4799,
+                  "mutability": "mutable",
+                  "name": "_signatureExpiry",
+                  "nameLocation": "7556:16:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4804,
+                  "src": "7548:24:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4798,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7548:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4801,
+                  "mutability": "mutable",
+                  "name": "_authorizationSignatureFromLevel",
+                  "nameLocation": "7595:32:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4804,
+                  "src": "7582:45:24",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 4800,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7582:5:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "7437:196:24"
+            },
+            "returnParameters": {
+              "id": 4803,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "7642:0:24"
+            },
+            "scope": 4852,
+            "src": "7421:222:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4805,
+              "nodeType": "StructuredDocumentation",
+              "src": "7649:653:24",
+              "text": "@notice Migrate the staked tokens for the caller from the LevelStaking Pool to Level\n@param _user The staker to migrate tokens for\n@param _tokens The tokens to migrate to Level from the LevelStaking Pool\n@param _migratorContract The migrator contract which will initially receive the migrated tokens before moving them to Level\n@param _destination The address which will receive the migrated tokens on Level\n@param _signatureExpiry The timestamp at which the signature in _authorizationSignatureFromLevel expires\n@param _stakerSignature The signature from the staker authorizing the migration of their tokens"
+            },
+            "functionSelector": "a5a21fdf",
+            "id": 4821,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "migrateWithSig",
+            "nameLocation": "8316:14:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4819,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4807,
+                  "mutability": "mutable",
+                  "name": "_user",
+                  "nameLocation": "8348:5:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4821,
+                  "src": "8340:13:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4806,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8340:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4810,
+                  "mutability": "mutable",
+                  "name": "_tokens",
+                  "nameLocation": "8382:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4821,
+                  "src": "8363:26:24",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 4808,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "8363:7:24",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 4809,
+                    "nodeType": "ArrayTypeName",
+                    "src": "8363:9:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4812,
+                  "mutability": "mutable",
+                  "name": "_migratorContract",
+                  "nameLocation": "8407:17:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4821,
+                  "src": "8399:25:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4811,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8399:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4814,
+                  "mutability": "mutable",
+                  "name": "_destination",
+                  "nameLocation": "8442:12:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4821,
+                  "src": "8434:20:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4813,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8434:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4816,
+                  "mutability": "mutable",
+                  "name": "_signatureExpiry",
+                  "nameLocation": "8472:16:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4821,
+                  "src": "8464:24:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4815,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8464:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4818,
+                  "mutability": "mutable",
+                  "name": "_stakerSignature",
+                  "nameLocation": "8511:16:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4821,
+                  "src": "8498:29:24",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 4817,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8498:5:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "8330:203:24"
+            },
+            "returnParameters": {
+              "id": 4820,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "8542:0:24"
+            },
+            "scope": 4852,
+            "src": "8307:236:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4822,
+              "nodeType": "StructuredDocumentation",
+              "src": "8732:249:24",
+              "text": "@notice Set/Change the required signer for the migration signature (_authorizationSignatureFromLevel in the migrate() function)\n@param _signer The address of the new signer for the migration signature\n@dev Only callable by the owner"
+            },
+            "functionSelector": "eebdec04",
+            "id": 4827,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setLevelSigner",
+            "nameLocation": "8995:14:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4825,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4824,
+                  "mutability": "mutable",
+                  "name": "_signer",
+                  "nameLocation": "9018:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4827,
+                  "src": "9010:15:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4823,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9010:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "9009:17:24"
+            },
+            "returnParameters": {
+              "id": 4826,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "9035:0:24"
+            },
+            "scope": 4852,
+            "src": "8986:50:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4828,
+              "nodeType": "StructuredDocumentation",
+              "src": "9042:211:24",
+              "text": "@notice Enable or disable the specified token for staking\n@param _token The token to enable or disable for staking\n@param _amount limit for stakable tokens\n@dev Only callable by the owner"
+            },
+            "functionSelector": "dbe49434",
+            "id": 4835,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setStakableAmount",
+            "nameLocation": "9267:17:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4833,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4830,
+                  "mutability": "mutable",
+                  "name": "_token",
+                  "nameLocation": "9293:6:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4835,
+                  "src": "9285:14:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4829,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9285:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4832,
+                  "mutability": "mutable",
+                  "name": "_amount",
+                  "nameLocation": "9309:7:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4835,
+                  "src": "9301:15:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4831,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9301:7:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "9284:33:24"
+            },
+            "returnParameters": {
+              "id": 4834,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "9326:0:24"
+            },
+            "scope": 4852,
+            "src": "9258:69:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4836,
+              "nodeType": "StructuredDocumentation",
+              "src": "9333:391:24",
+              "text": "@notice Add or remove the migrator to/from the blocklist, such that it can no longer be used from migrating tokens from the staking pool\n@param _migrator The migrator contract to add or remove from the blocklist\n@param _blocklisted If true, then add the migrator to the blocklist. If false, then remove the migrator from the blocklist.\n@dev Only callable by the owner"
+            },
+            "functionSelector": "f03639e3",
+            "id": 4843,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "blockMigrator",
+            "nameLocation": "9738:13:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4841,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4838,
+                  "mutability": "mutable",
+                  "name": "_migrator",
+                  "nameLocation": "9760:9:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4843,
+                  "src": "9752:17:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4837,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9752:7:24",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4840,
+                  "mutability": "mutable",
+                  "name": "_blocklisted",
+                  "nameLocation": "9776:12:24",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4843,
+                  "src": "9771:17:24",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 4839,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "9771:4:24",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "9751:38:24"
+            },
+            "returnParameters": {
+              "id": 4842,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "9798:0:24"
+            },
+            "scope": 4852,
+            "src": "9729:70:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4844,
+              "nodeType": "StructuredDocumentation",
+              "src": "9805:164:24",
+              "text": "@notice Pause further staking through the deposit function.\n@dev Only callable by the owner. Withdrawals and migrations will still be possible when paused"
+            },
+            "functionSelector": "8456cb59",
+            "id": 4847,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "pause",
+            "nameLocation": "9983:5:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4845,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "9988:2:24"
+            },
+            "returnParameters": {
+              "id": 4846,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "9999:0:24"
+            },
+            "scope": 4852,
+            "src": "9974:26:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 4848,
+              "nodeType": "StructuredDocumentation",
+              "src": "10006:112:24",
+              "text": "@notice Unpause staking allowing the deposit function to be used again\n@dev Only callable by the owner"
+            },
+            "functionSelector": "3f4ba83a",
+            "id": 4851,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "unpause",
+            "nameLocation": "10132:7:24",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4849,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "10139:2:24"
+            },
+            "returnParameters": {
+              "id": 4850,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "10150:0:24"
+            },
+            "scope": 4852,
+            "src": "10123:28:24",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 4853,
+        "src": "334:9819:24",
+        "usedErrors": [
+          4671,
+          4673,
+          4675,
+          4677,
+          4679,
+          4681,
+          4683,
+          4685,
+          4687,
+          4689,
+          4691,
+          4693,
+          4695,
+          4697,
+          4699,
+          4701,
+          4703,
+          4705,
+          4707
+        ],
+        "usedEvents": [
+          4718,
+          4729,
+          4746,
+          4751,
+          4758,
+          4765
+        ]
+      }
+    ],
+    "src": "39:10115:24"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.20+commit.5f1834bc.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2024-08-13T20:16:36.193Z"
+}

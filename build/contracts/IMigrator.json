@@ -1,0 +1,474 @@
+{
+  "contractName": "IMigrator",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_tokens",
+          "type": "address[]"
+        },
+        {
+          "internalType": "address",
+          "name": "_destination",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "_amounts",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "migrate",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: UNLICENSED\npragma solidity 0.8.20;\n\n/// @title Migrator Interface\n/// @notice Interface for the Migrator contract called by the LevelStaking Pool's migrate() function\ninterface IMigrator {\n    ///@notice Function called by the LevelStaking Pool to facilitate migration of staked tokens from the LevelStaking Pool to Level\n    ///@param _user The address of the user whose staked funds are being migrated to Level\n    ///@param _tokens The tokens being migrated to Level from the LevelStaking Pool\n    ///@param _destination The address which will be credited the tokens on Level\n    ///@param _amounts The amounts of each token to be migrated to Level for the _user\n    function migrate(\n        address _user,\n        address[] calldata _tokens,\n        address _destination,\n        uint256[] calldata _amounts\n    ) external;\n}\n",
+  "sourcePath": "/Users/leo/Documents/GitHub/clone2/points-farm/contracts/interface/IMigrator.sol",
+  "ast": {
+    "absolutePath": "/Users/leo/Documents/GitHub/clone2/points-farm/contracts/interface/IMigrator.sol",
+    "exportedSymbols": {
+      "IMigrator": [
+        1020
+      ]
+    },
+    "id": 1021,
+    "license": "UNLICENSED",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1004,
+        "literals": [
+          "solidity",
+          "0.8",
+          ".20"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:23:2"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IMigrator",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 1005,
+          "nodeType": "StructuredDocumentation",
+          "src": "64:131:2",
+          "text": "@title Migrator Interface\n @notice Interface for the Migrator contract called by the LevelStaking Pool's migrate() function"
+        },
+        "fullyImplemented": false,
+        "id": 1020,
+        "linearizedBaseContracts": [
+          1020
+        ],
+        "name": "IMigrator",
+        "nameLocation": "205:9:2",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 1006,
+              "nodeType": "StructuredDocumentation",
+              "src": "221:472:2",
+              "text": "@notice Function called by the LevelStaking Pool to facilitate migration of staked tokens from the LevelStaking Pool to Level\n@param _user The address of the user whose staked funds are being migrated to Level\n@param _tokens The tokens being migrated to Level from the LevelStaking Pool\n@param _destination The address which will be credited the tokens on Level\n@param _amounts The amounts of each token to be migrated to Level for the _user"
+            },
+            "functionSelector": "abccc77e",
+            "id": 1019,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "migrate",
+            "nameLocation": "707:7:2",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1017,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1008,
+                  "mutability": "mutable",
+                  "name": "_user",
+                  "nameLocation": "732:5:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1019,
+                  "src": "724:13:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1007,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "724:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1011,
+                  "mutability": "mutable",
+                  "name": "_tokens",
+                  "nameLocation": "766:7:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1019,
+                  "src": "747:26:2",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 1009,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "747:7:2",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 1010,
+                    "nodeType": "ArrayTypeName",
+                    "src": "747:9:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1013,
+                  "mutability": "mutable",
+                  "name": "_destination",
+                  "nameLocation": "791:12:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1019,
+                  "src": "783:20:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1012,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "783:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1016,
+                  "mutability": "mutable",
+                  "name": "_amounts",
+                  "nameLocation": "832:8:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1019,
+                  "src": "813:27:2",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_calldata_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 1014,
+                      "name": "uint256",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "813:7:2",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 1015,
+                    "nodeType": "ArrayTypeName",
+                    "src": "813:9:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "714:132:2"
+            },
+            "returnParameters": {
+              "id": 1018,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "855:0:2"
+            },
+            "scope": 1020,
+            "src": "698:158:2",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 1021,
+        "src": "195:663:2",
+        "usedErrors": [],
+        "usedEvents": []
+      }
+    ],
+    "src": "39:820:2"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/leo/Documents/GitHub/clone2/points-farm/contracts/interface/IMigrator.sol",
+    "exportedSymbols": {
+      "IMigrator": [
+        1020
+      ]
+    },
+    "id": 1021,
+    "license": "UNLICENSED",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1004,
+        "literals": [
+          "solidity",
+          "0.8",
+          ".20"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:23:2"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IMigrator",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 1005,
+          "nodeType": "StructuredDocumentation",
+          "src": "64:131:2",
+          "text": "@title Migrator Interface\n @notice Interface for the Migrator contract called by the LevelStaking Pool's migrate() function"
+        },
+        "fullyImplemented": false,
+        "id": 1020,
+        "linearizedBaseContracts": [
+          1020
+        ],
+        "name": "IMigrator",
+        "nameLocation": "205:9:2",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 1006,
+              "nodeType": "StructuredDocumentation",
+              "src": "221:472:2",
+              "text": "@notice Function called by the LevelStaking Pool to facilitate migration of staked tokens from the LevelStaking Pool to Level\n@param _user The address of the user whose staked funds are being migrated to Level\n@param _tokens The tokens being migrated to Level from the LevelStaking Pool\n@param _destination The address which will be credited the tokens on Level\n@param _amounts The amounts of each token to be migrated to Level for the _user"
+            },
+            "functionSelector": "abccc77e",
+            "id": 1019,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "migrate",
+            "nameLocation": "707:7:2",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1017,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1008,
+                  "mutability": "mutable",
+                  "name": "_user",
+                  "nameLocation": "732:5:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1019,
+                  "src": "724:13:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1007,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "724:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1011,
+                  "mutability": "mutable",
+                  "name": "_tokens",
+                  "nameLocation": "766:7:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1019,
+                  "src": "747:26:2",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 1009,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "747:7:2",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 1010,
+                    "nodeType": "ArrayTypeName",
+                    "src": "747:9:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1013,
+                  "mutability": "mutable",
+                  "name": "_destination",
+                  "nameLocation": "791:12:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1019,
+                  "src": "783:20:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1012,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "783:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1016,
+                  "mutability": "mutable",
+                  "name": "_amounts",
+                  "nameLocation": "832:8:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1019,
+                  "src": "813:27:2",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_calldata_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 1014,
+                      "name": "uint256",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "813:7:2",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 1015,
+                    "nodeType": "ArrayTypeName",
+                    "src": "813:9:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "714:132:2"
+            },
+            "returnParameters": {
+              "id": 1018,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "855:0:2"
+            },
+            "scope": 1020,
+            "src": "698:158:2",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 1021,
+        "src": "195:663:2",
+        "usedErrors": [],
+        "usedEvents": []
+      }
+    ],
+    "src": "39:820:2"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.20+commit.5f1834bc.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2024-08-13T20:29:55.479Z"
+}
