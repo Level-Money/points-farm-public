@@ -31,7 +31,7 @@ contract LevelStakingPool is
         );
 
     // (tokenAddress => isAllowedForStaking)
-    mapping(address => bool) public tokenAllowlist;
+    mapping(address => uint256) public tokenAllowlist;
 
     // (tokenAddress => stakerAddress => stakedAmount)
     mapping(address => mapping(address => uint256)) public balance;
@@ -63,7 +63,7 @@ contract LevelStakingPool is
         for (uint256 i; i < length; ++i) {
             if (_tokensAllowed[i] == address(0))
                 revert TokenCannotBeZeroAddress();
-            tokenAllowlist[_tokensAllowed[i]] = true;
+            tokenAllowlist[_tokensAllowed[i]] = 0;
         }
     }
 
@@ -81,7 +81,9 @@ contract LevelStakingPool is
     ) external whenNotPaused {
         if (_amount == 0) revert DepositAmountCannotBeZero();
         if (_for == address(0)) revert CannotDepositForZeroAddress();
-        if (!tokenAllowlist[_token]) revert TokenNotAllowedForStaking();
+        if (_amount + ERC20(_token).balanceOf(address(this)) >= tokenAllowlist[_token]){
+            revert StakingLimitExceeded();
+        }
 
         balance[_token][_for] += _amount;
 
@@ -288,13 +290,10 @@ contract LevelStakingPool is
     /**
      * @inheritdoc ILevelStakingPool
      */
-    function setStakable(address _token, bool _canStake) external onlyOwner {
+    function setStakableAmount(address _token, uint256 _amount) external onlyOwner {
         if (_token == address(0)) revert TokenCannotBeZeroAddress();
-        if (tokenAllowlist[_token] == _canStake)
-            revert TokenAlreadyConfiguredWithState();
-
-        tokenAllowlist[_token] = _canStake;
-        emit TokenStakabilityChanged(_token, _canStake);
+        tokenAllowlist[_token] = _amount;
+        emit TokenStakabilityChanged(_token, _amount);
     }
 
     /**

@@ -19,6 +19,7 @@ interface ILevelStakingPool {
     error DepositAmountCannotBeZero(); // Thrown if staker attempts to call deposit() with zero amount
     error WithdrawAmountCannotBeZero(); //Thrown if staker attempts to call withdraw() with zero amount
     error TokenNotAllowedForStaking(); // Thrown if staker attempts to stake unsupported token (or token disabled for staking)
+    error StakingLimitExceeded();
     error UserDoesNotHaveStake(); //Thrown if the staker is attempting to migrate with no stake
     error MigratorCannotBeZeroAddress(); //Thrown if the provided migrator is the zero address
     error MigratorAlreadyAllowedOrBlocked(); //Thrown if attempting to block a migrator which has already been blocked or attempting to allow a migrator which is already allowed
@@ -82,8 +83,8 @@ interface ILevelStakingPool {
 
     ///@notice Emitted when a token has been enabled or disabled for staking
     ///@param token The address of the token which has been enabled/disabled for staking
-    ///@param enabled Is true if the token is being enabled and false if the token is being disabled
-    event TokenStakabilityChanged(address token, bool enabled);
+    ///@param amount amount of tokens stakeable
+    event TokenStakabilityChanged(address token, uint256 amount);
 
     ///@notice Emitted when a migrator has been added or removed from the blocklist
     ///@param migrator The address of the migrator which has been added or removed from the blocklist
