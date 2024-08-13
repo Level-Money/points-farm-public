@@ -31,7 +31,7 @@ contract LevelStakingPool is
         );
 
     // (tokenAddress => isAllowedForStaking)
-    mapping(address => uint256) public tokenAllowlist;
+    mapping(address => uint256) public tokenBalanceAllowList;
 
     // (tokenAddress => stakerAddress => stakedAmount)
     mapping(address => mapping(address => uint256)) public balance;
@@ -51,10 +51,14 @@ contract LevelStakingPool is
     constructor(
         address _signer,
         address[] memory _tokensAllowed,
+        uint256[] memory _limits,
         address _weth
     ) Ownable(msg.sender) EIP712("LevelStakingPool", "1") {
         if (_signer == address(0)) revert SignerCannotBeZeroAddress();
         if (_weth == address(0)) revert WETHCannotBeZeroAddress();
+        if (_limits.length != _tokensAllowed.length){
+            revert();
+        }
 
         WETH_ADDRESS = _weth;
 
@@ -63,7 +67,7 @@ contract LevelStakingPool is
         for (uint256 i; i < length; ++i) {
             if (_tokensAllowed[i] == address(0))
                 revert TokenCannotBeZeroAddress();
-            tokenAllowlist[_tokensAllowed[i]] = 0;
+            tokenBalanceAllowList[_tokensAllowed[i]] = _limits[i];
         }
     }
 
@@ -81,7 +85,7 @@ contract LevelStakingPool is
     ) external whenNotPaused {
         if (_amount == 0) revert DepositAmountCannotBeZero();
         if (_for == address(0)) revert CannotDepositForZeroAddress();
-        if (_amount + IERC20(_token).balanceOf(address(this)) >= tokenAllowlist[_token]){
+        if (_amount + IERC20(_token).balanceOf(address(this)) >= tokenBalanceAllowList[_token]){
             revert StakingLimitExceeded();
         }
 
@@ -95,7 +99,7 @@ contract LevelStakingPool is
     function depositETHFor(address _for) external payable whenNotPaused {
         if (msg.value == 0) revert DepositAmountCannotBeZero();
         if (_for == address(0)) revert CannotDepositForZeroAddress();
-        if (tokenAllowlist[WETH_ADDRESS] == 0) revert TokenNotAllowedForStaking();
+        if (tokenBalanceAllowList[WETH_ADDRESS] == 0) revert TokenNotAllowedForStaking();
 
         balance[WETH_ADDRESS][_for] += msg.value;
         emit Deposit(++eventId, _for, WETH_ADDRESS, msg.value);
@@ -292,7 +296,7 @@ contract LevelStakingPool is
      */
     function setStakableAmount(address _token, uint256 _amount) external onlyOwner {
         if (_token == address(0)) revert TokenCannotBeZeroAddress();
-        tokenAllowlist[_token] = _amount;
+        tokenBalanceAllowList[_token] = _amount;
         emit TokenStakabilityChanged(_token, _amount);
     }
 
