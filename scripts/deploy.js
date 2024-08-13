@@ -45,8 +45,9 @@ async function main() {
     args[network].weth,
   ];
 
-  const LevelMoney = await hre.ethers.getContractFactory("LevelStakingPool");
-  const levelMoney = await LevelMoney.deploy(_signer, _tokensAllowed, _weth);
+  const limits = [10000000000, 10000000000]
+  const LevelMoney = await hre.ethers.getContractFactory("contracts/LevelStakingPool.sol:LevelStakingPool");
+  const levelMoney = await LevelMoney.deploy(_signer, _tokensAllowed, limits, _weth);
 
   await levelMoney.waitForDeployment();
 
@@ -55,7 +56,7 @@ async function main() {
   console.log(`Verifying...`);
   await hre.run("verify:verify", {
     address: levelMoney.target,
-    constructorArguments: [_signer, _tokensAllowed, _weth],
+    constructorArguments: [_signer, _tokensAllowed, limits, _weth],
   });
   console.log(`Verified!`);
 }
