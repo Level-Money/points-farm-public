@@ -81,7 +81,7 @@ contract LevelStakingPool is
     ) external whenNotPaused {
         if (_amount == 0) revert DepositAmountCannotBeZero();
         if (_for == address(0)) revert CannotDepositForZeroAddress();
-        if (_amount + ERC20(_token).balanceOf(address(this)) >= tokenAllowlist[_token]){
+        if (_amount + IERC20(_token).balanceOf(address(this)) >= tokenAllowlist[_token]){
             revert StakingLimitExceeded();
         }
 
@@ -95,7 +95,7 @@ contract LevelStakingPool is
     function depositETHFor(address _for) external payable whenNotPaused {
         if (msg.value == 0) revert DepositAmountCannotBeZero();
         if (_for == address(0)) revert CannotDepositForZeroAddress();
-        if (!tokenAllowlist[WETH_ADDRESS]) revert TokenNotAllowedForStaking();
+        if (tokenAllowlist[WETH_ADDRESS] == 0) revert TokenNotAllowedForStaking();
 
         balance[WETH_ADDRESS][_for] += msg.value;
         emit Deposit(++eventId, _for, WETH_ADDRESS, msg.value);
