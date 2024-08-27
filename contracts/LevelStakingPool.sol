@@ -85,7 +85,7 @@ contract LevelStakingPool is
     ) external whenNotPaused {
         if (_amount == 0) revert DepositAmountCannotBeZero();
         if (_for == address(0)) revert CannotDepositForZeroAddress();
-        if (_amount + IERC20(_token).balanceOf(address(this)) >= tokenBalanceAllowList[_token]){
+        if (_amount + IERC20(_token).balanceOf(address(this)) > tokenBalanceAllowList[_token]){
             revert StakingLimitExceeded();
         }
 
