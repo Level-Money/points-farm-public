@@ -287,6 +287,17 @@ contract LevelStakingPool is
     /**
      * @inheritdoc ILevelStakingPool
      */
+    function setLevelSigner(address _signer) external onlyOwner {
+        if (_signer == address(0)) revert SignerCannotBeZeroAddress();
+        if (_signer == levelSigner) revert SignerAlreadySetToAddress();
+
+        levelSigner = _signer;
+        emit SignerChanged(_signer);
+    }
+
+    /**
+     * @inheritdoc ILevelStakingPool
+     */
     function setStakableAmount(
         address _token,
         uint256 _amount
@@ -294,6 +305,21 @@ contract LevelStakingPool is
         if (_token == address(0)) revert TokenCannotBeZeroAddress();
         tokenBalanceAllowList[_token] = _amount;
         emit TokenStakabilityChanged(_token, _amount);
+    }
+
+    /**
+     * @inheritdoc ILevelStakingPool
+     */
+    function blockMigrator(
+        address _migrator,
+        bool _blocklisted
+    ) external onlyOwner {
+        if (_migrator == address(0)) revert MigratorCannotBeZeroAddress();
+        if (migratorBlocklist[_migrator] == _blocklisted)
+            revert MigratorAlreadyAllowedOrBlocked();
+
+        migratorBlocklist[_migrator] = _blocklisted;
+        emit BlocklistChanged(_migrator, _blocklisted);
     }
 
     /**
