@@ -56,7 +56,7 @@ contract LevelStakingPool is
     ) Ownable(msg.sender) EIP712("LevelStakingPool", "1") {
         if (_signer == address(0)) revert SignerCannotBeZeroAddress();
         if (_weth == address(0)) revert WETHCannotBeZeroAddress();
-        if (_limits.length != _tokensAllowed.length){
+        if (_limits.length != _tokensAllowed.length) {
             revert();
         }
 
@@ -85,7 +85,10 @@ contract LevelStakingPool is
     ) external whenNotPaused {
         if (_amount == 0) revert DepositAmountCannotBeZero();
         if (_for == address(0)) revert CannotDepositForZeroAddress();
-        if (_amount + IERC20(_token).balanceOf(address(this)) > tokenBalanceAllowList[_token]){
+        if (
+            _amount + IERC20(_token).balanceOf(address(this)) >
+            tokenBalanceAllowList[_token]
+        ) {
             revert StakingLimitExceeded();
         }
 
@@ -99,7 +102,8 @@ contract LevelStakingPool is
     function depositETHFor(address _for) external payable whenNotPaused {
         if (msg.value == 0) revert DepositAmountCannotBeZero();
         if (_for == address(0)) revert CannotDepositForZeroAddress();
-        if (tokenBalanceAllowList[WETH_ADDRESS] == 0) revert TokenNotAllowedForStaking();
+        if (tokenBalanceAllowList[WETH_ADDRESS] == 0)
+            revert TokenNotAllowedForStaking();
 
         balance[WETH_ADDRESS][_for] += msg.value;
         emit Deposit(++eventId, _for, WETH_ADDRESS, msg.value);
@@ -283,36 +287,13 @@ contract LevelStakingPool is
     /**
      * @inheritdoc ILevelStakingPool
      */
-    function setLevelSigner(address _signer) external onlyOwner {
-        if (_signer == address(0)) revert SignerCannotBeZeroAddress();
-        if (_signer == levelSigner) revert SignerAlreadySetToAddress();
-
-        levelSigner = _signer;
-        emit SignerChanged(_signer);
-    }
-
-    /**
-     * @inheritdoc ILevelStakingPool
-     */
-    function setStakableAmount(address _token, uint256 _amount) external onlyOwner {
+    function setStakableAmount(
+        address _token,
+        uint256 _amount
+    ) external onlyOwner {
         if (_token == address(0)) revert TokenCannotBeZeroAddress();
         tokenBalanceAllowList[_token] = _amount;
         emit TokenStakabilityChanged(_token, _amount);
-    }
-
-    /**
-     * @inheritdoc ILevelStakingPool
-     */
-    function blockMigrator(
-        address _migrator,
-        bool _blocklisted
-    ) external onlyOwner {
-        if (_migrator == address(0)) revert MigratorCannotBeZeroAddress();
-        if (migratorBlocklist[_migrator] == _blocklisted)
-            revert MigratorAlreadyAllowedOrBlocked();
-
-        migratorBlocklist[_migrator] = _blocklisted;
-        emit BlocklistChanged(_migrator, _blocklisted);
     }
 
     /**
