@@ -43,7 +43,7 @@ contract LevelUsdPointsFarm is
 
     // --------------------- Constructor ----------------------
 
-    constructor(address _initialOwner) Ownable2Step() {
+    constructor(address _initialOwner) Ownable(_initialOwner) {
         if (_initialOwner == address(0)) revert ZeroAddressException();
         _transferOwnership(_initialOwner);
     }
