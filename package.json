@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "deploy-contracts": "npx hardhat run scripts/deploy.js",
+    "deploy-points-farm": "npx hardhat run scripts/deploy.points-farm.js",
     "verify-contracts": "npx hardhat verify-contracts",
     "compile": "npx hardhat compile"
   },

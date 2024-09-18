@@ -21,6 +21,15 @@ const args = {
   },
 };
 
+const pointsFarmArgs = {
+  mainnet: {
+    initialOwner: "0x343ACce723339D5A417411D8Ff57fde8886E91dc",
+  },
+  sepolia: {
+    initialOwner: "0xe9AF0428143E4509df4379Bd10C4850b223F2EcB",
+  },
+};
+
 task("verify-contracts", "Verify a contract")
   .addPositionalParam("address", "The address of the contract to verify")
   .setAction(async (taskArgs, hre) => {
@@ -33,6 +42,28 @@ task("verify-contracts", "Verify a contract")
       args[network].limits,
       args[network].weth,
     ];
+
+    console.log(`Verifying...`);
+    await hre.run("verify:verify", {
+      address: taskArgs.address,
+      constructorArguments,
+    });
+    console.log(`Verified!`);
+  });
+
+task("verify-points-farm", "Verify points farm")
+  .addPositionalParam(
+    "address",
+    "The address of the points farm contract to verify"
+  )
+  .setAction(async (taskArgs, hre) => {
+    const network = hre.network.name;
+    console.log(
+      `Verifying points farm ${taskArgs.address} on network:`,
+      network
+    );
+
+    const constructorArguments = [pointsFarmArgs[network].initialOwner];
 
     console.log(`Verifying...`);
     await hre.run("verify:verify", {
